@@ -1,0 +1,45 @@
+import type { Metadata } from 'next';
+import { Inter, Hind_Siliguri, Amiri } from 'next/font/google';
+import './globals.css';
+import { Header } from '@/components/navigation/Header';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const hindSiliguri = Hind_Siliguri({
+    weight: ['300', '400', '500', '600', '700'],
+    subsets: ['bengali'],
+    variable: '--font-bengali'
+});
+const amiri = Amiri({
+    weight: ['400', '700'],
+    subsets: ['arabic'],
+    variable: '--font-arabic'
+});
+
+export const metadata: Metadata = {
+    title: 'Noor e Ramadan - নূর এ রমজান',
+    description: 'Your Digital Islamic Companion - আপনার ডিজিটাল ইসলামিক সঙ্গী',
+};
+
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="bn">
+            <head>
+                <link rel="manifest" href="/manifest.json" />
+                <meta name="theme-color" content="#059669" />
+            </head>
+            <body className={`${inter.variable} ${hindSiliguri.variable} ${amiri.variable} antialiased`}>
+                <div className="min-h-screen">
+                    {/* Header with Back Button */}
+                    <Header />
+
+                    {/* Main Content */}
+                    <main>{children}</main>
+                </div>
+            </body>
+        </html>
+    );
+}
