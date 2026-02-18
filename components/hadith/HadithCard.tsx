@@ -6,9 +6,10 @@ interface HadithCardProps {
     hadith: Hadith;
     translation?: string;
     narrator?: string;
+    grade?: string;
 }
 
-export default function HadithCard({ hadith, translation, narrator }: HadithCardProps) {
+export default function HadithCard({ hadith, translation, narrator, grade }: HadithCardProps) {
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 border-t-4 border-emerald-500">
             <div className="p-6">
@@ -16,6 +17,16 @@ export default function HadithCard({ hadith, translation, narrator }: HadithCard
                     <span className="bg-emerald-100 text-emerald-800 text-sm font-bold px-3 py-1 rounded-full">
                         হাদিস: {toBanglaNumber(hadith.number)}
                     </span>
+                    {grade && (
+                        <span className="text-xs font-semibold px-3 py-1 rounded-full"
+                            style={{
+                                backgroundColor: grade.includes('সহিহ') ? '#d1fae5' : grade.includes('হাসান') ? '#fef3c7' : '#fee2e2',
+                                color: grade.includes('সহিহ') ? '#065f46' : grade.includes('হাসান') ? '#92400e' : '#991b1b',
+                            }}
+                        >
+                            {grade}
+                        </span>
+                    )}
                 </div>
 
                 <div className="mb-6 text-right" dir="rtl">

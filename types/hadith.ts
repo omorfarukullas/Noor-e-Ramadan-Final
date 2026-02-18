@@ -25,4 +25,5 @@ export interface HadithResponse {
 export interface TranslatedHadith extends Hadith {
     translation: string; // Bangla translation
     narrator: string; // Narrator info
+    grade?: string; // Hadith grade (e.g. সহিহ হাদিস)
 }

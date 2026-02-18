@@ -47,7 +47,7 @@ export default function PrayerTimesPage() {
     });
 
     useEffect(() => {
-        // Try to get user's location
+        // Try to get user's location or saved location
         detectLocation();
     }, []);
 
@@ -66,6 +66,30 @@ export default function PrayerTimesPage() {
     }, [prayerData]);
 
     const detectLocation = () => {
+        // Check saved location first
+        if (typeof window !== 'undefined') {
+            const savedLocation = localStorage.getItem('settings_location');
+
+            // If saved location is specifically "Dhaka, Bangladesh" (default), treat it as empty/GPS
+            if (savedLocation === 'Dhaka, Bangladesh') {
+                localStorage.setItem('settings_location', '');
+            } else if (savedLocation) {
+                const parts = savedLocation.split(',');
+                const city = parts[0].trim();
+                const country = parts.length > 1 ? parts[1].trim() : 'Bangladesh';
+
+                if (city) {
+                    setLocation({
+                        city,
+                        country,
+                        loading: false
+                    });
+                    return;
+                }
+            }
+        }
+
+        // Fallback to geolocation
         if ('geolocation' in navigator) {
             setLocation(prev => ({ ...prev, loading: true }));
 
@@ -82,14 +106,21 @@ export default function PrayerTimesPage() {
                 },
                 (err) => {
                     console.log('Geolocation denied, using default location:', err);
+                    // Default to Dhaka ONLY if GPS denied
                     setLocation({
                         city: 'Dhaka',
                         country: 'Bangladesh',
                         loading: false
                     });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
                 }
             );
         } else {
+            console.log('Geolocation not supported');
             setLocation({
                 city: 'Dhaka',
                 country: 'Bangladesh',
@@ -107,6 +138,13 @@ export default function PrayerTimesPage() {
                 url += `lat=${location.lat}&lng=${location.lng}`;
             } else {
                 url += `city=${location.city}&country=${location.country}`;
+            }
+
+            // Add settings params
+            if (typeof window !== 'undefined') {
+                const method = localStorage.getItem('settings_method') || '1';
+                const madhab = localStorage.getItem('settings_madhab') || '1';
+                url += `&method=${method}&madhab=${madhab}`;
             }
 
             const response = await fetch(url);
@@ -157,7 +195,7 @@ export default function PrayerTimesPage() {
                 const minsLeft = minutesLeft % 60;
                 setNextPrayer({
                     name: prayerNamesBn[prayer.name],
-                    timeLeft: hoursLeft > 0 ? `${hoursLeft}ঘ ${minsLeft}মি` : `${minsLeft}মি`
+                    timeLeft: hoursLeft > 0 ? `${hoursLeft} ঘণ্টা ${minsLeft} মিনিট` : `${minsLeft} মিনিট`
                 });
                 return;
             }
@@ -171,7 +209,7 @@ export default function PrayerTimesPage() {
         const minsLeft = minutesLeft % 60;
         setNextPrayer({
             name: 'ফজর',
-            timeLeft: `${hoursLeft}ঘ ${minsLeft}মি`
+            timeLeft: `${hoursLeft} ঘণ্টা ${minsLeft} মিনিট`
         });
     };
 
@@ -189,7 +227,7 @@ export default function PrayerTimesPage() {
                 <div className="max-w-2xl mx-auto text-center">
                     <div className="text-6xl mb-4 animate-pulse">⏰</div>
                     <p className="text-xl text-gray-600">
-                        {location.loading ? 'আপনার অবস্থান নির্ণয় করা হচ্ছে...' : 'নামাজের সময় লোড হচ্ছে...'}
+                        {location.loading ? 'আপনার অবস্থান নির্ণয় করা হচ্ছে (GPS)...' : 'নামাজের সময় লোড হচ্ছে...'}
                     </p>
                 </div>
             </div>
@@ -234,7 +272,7 @@ export default function PrayerTimesPage() {
                         <span className="text-xl">📍</span>
                         <p className="text-gray-700 font-semibold">
                             {location.lat && location.lng ? (
-                                `আপনার অবস্থান (${location.lat.toFixed(2)}°, ${location.lng.toFixed(2)}°)`
+                                `বর্তমান অবস্থান (GPS)`
                             ) : (
                                 `${location.city}, ${location.country}`
                             )}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Hadith, TranslatedHadith, HadithBook } from '@/types/hadith';
-import { fetchHadiths, fetchHadithByNumber, translateText } from '@/lib/hadith-api'; // Import fetchHadithByNumber
+import { fetchHadiths, fetchHadithByNumber, fetchBanglaHadiths, translateText } from '@/lib/hadith-api';
 import HadithCard from './HadithCard';
 import HadithPagination from './HadithPagination';
 import HadithSearch from './HadithSearch';
@@ -13,8 +13,8 @@ const ITEMS_PER_PAGE = 25;
 
 interface HadithReaderProps {
     bookId: string;
-    bookName: string; // Passed from parent or derived
-    available: number; // Passed via props to know total
+    bookName: string;
+    available: number;
 }
 
 export default function HadithReader({ bookId, bookName, available }: HadithReaderProps) {
@@ -26,36 +26,24 @@ export default function HadithReader({ bookId, bookName, available }: HadithRead
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Handle jumpTo param on mount or change
-    useEffect(() => {
-        if (jumpTo) {
-            // Instead of calculating page, just let the main effect handle it if we treat it as a search
-            // But we need a way to distinguish "search mode" vs "pagination mode"
-            // Let's use a separate state or just load it
-        }
-    }, [jumpTo]);
-
     const [searchQuery, setSearchQuery] = useState<string | null>(jumpTo);
 
     useEffect(() => {
         setSearchQuery(jumpTo);
     }, [jumpTo]);
 
-    // Fetch hadiths key logic
     useEffect(() => {
         async function getHadiths() {
             setLoading(true);
             setError(null);
-            setHadiths([]); // Clear previous
+            setHadiths([]);
 
             try {
                 let response;
 
                 if (searchQuery) {
-                    // Fetch specific hadith
                     response = await fetchHadithByNumber(bookId, searchQuery);
                 } else {
-                    // Normal pagination
                     const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
                     const end = currentPage * ITEMS_PER_PAGE;
                     const range = `${start}-${end}`;
@@ -64,39 +52,73 @@ export default function HadithReader({ bookId, bookName, available }: HadithRead
 
                 if (response && response.data && response.data.hadiths) {
                     const fetchedHadiths = response.data.hadiths;
+                    const hadithNumbers = fetchedHadiths.map((h: Hadith) => h.number);
 
+                    // Check session cache first
+                    const uncachedNumbers: number[] = [];
+                    const cachedResults: Record<number, TranslatedHadith> = {};
+
+                    for (const hadith of fetchedHadiths) {
+                        const cacheKey = `hadith_bn_${bookId}_${hadith.number}`;
+                        const cached = sessionStorage.getItem(cacheKey);
+                        if (cached) {
+                            cachedResults[hadith.number] = JSON.parse(cached);
+                        } else {
+                            uncachedNumbers.push(hadith.number);
+                        }
+                    }
+
+                    // Fetch Bangla translations for uncached hadiths
+                    let banglaData: Record<number, { bn: string; narrator: string; grade: string }> = {};
+                    if (uncachedNumbers.length > 0) {
+                        banglaData = await fetchBanglaHadiths(bookId, uncachedNumbers);
+                    }
+
+                    // Build processed hadiths list
                     const processedHadiths = await Promise.all(
                         fetchedHadiths.map(async (hadith: Hadith) => {
-                            const cacheKey = `hadith_${bookId}_${hadith.number}`;
-                            const cached = sessionStorage.getItem(cacheKey);
-
-                            if (cached) {
-                                return JSON.parse(cached);
+                            // Return from cache if available
+                            if (cachedResults[hadith.number]) {
+                                return cachedResults[hadith.number];
                             }
 
-                            const textToTranslate = (hadith as any).id || (hadith as any).en || '';
-
+                            const bangla = banglaData[hadith.number];
                             let translation = '';
-                            if (textToTranslate) {
-                                translation = await translateText(textToTranslate);
+                            let narrator = bookName;
+                            let grade = '';
+
+                            if (bangla && bangla.bn) {
+                                // Use perfect Bangla translation from dedicated API
+                                translation = bangla.bn;
+                                narrator = bangla.narrator || bookName;
+                                grade = bangla.grade || '';
+                            } else {
+                                // Fallback: translate Indonesian text to Bangla
+                                const textToTranslate = (hadith as any).id || (hadith as any).en || '';
+                                if (textToTranslate) {
+                                    translation = await translateText(textToTranslate);
+                                }
                             }
 
-                            const translatedHadith = {
+                            const translatedHadith: TranslatedHadith = {
                                 ...hadith,
                                 translation,
-                                narrator: bookName
+                                narrator,
+                                grade,
                             };
 
+                            // Cache the result
+                            const cacheKey = `hadith_bn_${bookId}_${hadith.number}`;
                             sessionStorage.setItem(cacheKey, JSON.stringify(translatedHadith));
+
                             return translatedHadith;
                         })
                     );
 
                     setHadiths(processedHadiths);
                 } else {
-                    // If search failed
                     if (searchQuery) {
-                        setError('হাদিসটি খুঁজে পাওয়া যায়নি।');
+                        setError('হাদিসটি খুঁজে পাওয়া যায়নি।');
                     } else {
                         setError('হাদিস লোড করতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
                     }
@@ -115,7 +137,7 @@ export default function HadithReader({ bookId, bookName, available }: HadithRead
         const num = parseInt(hadithNumber);
         if (!isNaN(num) && num > 0) {
             setSearchQuery(hadithNumber);
-            setCurrentPage(1); // Reset page context though not used in search mode
+            setCurrentPage(1);
         } else {
             alert('সঠিক হাদিস নম্বর দিন।');
         }
@@ -157,6 +179,7 @@ export default function HadithReader({ bookId, bookName, available }: HadithRead
                 <div className="text-center py-20">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
                     <p className="text-lg text-gray-600">হাদিস লোড হচ্ছে...</p>
+                    <p className="text-sm text-gray-400 mt-2">বাংলা অনুবাদ সংগ্রহ করা হচ্ছে...</p>
                 </div>
             ) : (
                 <>
@@ -166,7 +189,8 @@ export default function HadithReader({ bookId, bookName, available }: HadithRead
                                 key={hadith.number}
                                 hadith={hadith}
                                 translation={hadith.translation}
-                                narrator={bookName}
+                                narrator={hadith.narrator}
+                                grade={(hadith as any).grade}
                             />
                         ))}
                     </div>

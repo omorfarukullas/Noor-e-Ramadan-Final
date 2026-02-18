@@ -4,23 +4,26 @@ import { ArrowLeft } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
+// Maps each path pattern to its direct parent page
+function getParentPath(pathname: string): string {
+    // Hadith sub-pages → /hadith
+    if (pathname.startsWith('/hadith/')) return '/hadith';
+    // Duas sub-pages → /duas
+    if (pathname.startsWith('/duas/')) return '/duas';
+    // Quran surah page → /quran
+    if (pathname.startsWith('/quran/')) return '/quran';
+    // All top-level pages → home
+    return '/';
+}
+
 export function Header() {
     const router = useRouter();
     const pathname = usePathname();
     const isHome = pathname === '/';
 
     const handleBack = () => {
-        if (pathname.startsWith('/hadith/')) {
-            router.push('/hadith');
-        } else if (pathname === '/hadith') {
-            router.push('/');
-        } else if (pathname.startsWith('/duas/')) {
-            router.push('/duas');
-        } else if (pathname === '/duas') {
-            router.push('/');
-        } else {
-            router.back();
-        }
+        const parent = getParentPath(pathname);
+        router.push(parent);
     };
 
     return (

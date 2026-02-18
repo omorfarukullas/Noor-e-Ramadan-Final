@@ -3,16 +3,23 @@ import { getSurahById } from '@/lib/quran-api';
 import SurahHeader from '@/components/quran/SurahHeader';
 import VerseDisplay from '@/components/quran/VerseDisplay';
 
+export const dynamic = 'force-static';
+export const revalidate = 86400; // Revalidate daily
+
+export async function generateStaticParams() {
+    return Array.from({ length: 114 }, (_, i) => ({
+        id: String(i + 1),
+    }));
+}
+
 export default async function SurahDetailPage({
     params,
 }: {
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-
     const surahNumber = parseInt(id, 10);
 
-    // Validate surah number
     if (isNaN(surahNumber) || surahNumber < 1 || surahNumber > 114) {
         notFound();
     }
@@ -31,7 +38,7 @@ export default async function SurahDetailPage({
             {/* Surah Header */}
             <SurahHeader surah={surah} />
 
-            {/* Verses */}
+            {/* Verses */} {/* Previous simple layout */}
             <div className="max-w-4xl mx-auto">
                 {surah.verses.map((verse) => (
                     <VerseDisplay key={verse.number} verse={verse} />
@@ -39,11 +46,4 @@ export default async function SurahDetailPage({
             </div>
         </div>
     );
-}
-
-// Generate static params for all 114 surahs
-export async function generateStaticParams() {
-    return Array.from({ length: 114 }, (_, i) => ({
-        id: String(i + 1),
-    }));
 }

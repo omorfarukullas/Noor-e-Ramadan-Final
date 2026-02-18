@@ -165,9 +165,9 @@ function formatTimeUntil(minutes: number): string {
     const mins = minutes % 60;
 
     if (hours > 0) {
-        return `${hours}h ${mins}m`;
+        return `${hours} ঘণ্টা ${mins} মিনিট`;
     }
-    return `${mins}m`;
+    return `${mins} মিনিট`;
 }
 
 // Format time to 12-hour format
