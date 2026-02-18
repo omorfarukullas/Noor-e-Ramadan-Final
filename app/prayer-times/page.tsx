@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 interface PrayerTimings {
     Fajr: string;
@@ -35,6 +35,14 @@ interface LocationState {
     error?: string;
 }
 
+const prayerNamesBn: { [key: string]: string } = {
+    'Fajr': 'ফজর',
+    'Dhuhr': 'জোহর',
+    'Asr': 'আসর',
+    'Maghrib': 'মাগরিব',
+    'Isha': 'ইশা'
+};
+
 export default function PrayerTimesPage() {
     const [prayerData, setPrayerData] = useState<PrayerData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -46,26 +54,7 @@ export default function PrayerTimesPage() {
         loading: false
     });
 
-    useEffect(() => {
-        // Try to get user's location or saved location
-        detectLocation();
-    }, []);
-
-    useEffect(() => {
-        if (!location.loading) {
-            fetchPrayerTimes();
-        }
-    }, [location]);
-
-    useEffect(() => {
-        if (prayerData) {
-            updateNextPrayer();
-            const interval = setInterval(updateNextPrayer, 60000);
-            return () => clearInterval(interval);
-        }
-    }, [prayerData]);
-
-    const detectLocation = () => {
+    const detectLocation = useCallback(() => {
         // Check saved location first
         if (typeof window !== 'undefined') {
             const savedLocation = localStorage.getItem('settings_location');
@@ -91,7 +80,7 @@ export default function PrayerTimesPage() {
 
         // Fallback to geolocation
         if ('geolocation' in navigator) {
-            setLocation(prev => ({ ...prev, loading: true }));
+            setLocation((prev: any) => ({ ...prev, loading: true }));
 
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -127,51 +116,16 @@ export default function PrayerTimesPage() {
                 loading: false
             });
         }
-    };
+    }, []);
 
-    const fetchPrayerTimes = async () => {
-        try {
-            setLoading(true);
-            let url = '/api/prayer-times?';
+    useEffect(() => {
+        // Try to get user's location or saved location
+        detectLocation();
+    }, [detectLocation]);
 
-            if (location.lat && location.lng) {
-                url += `lat=${location.lat}&lng=${location.lng}`;
-            } else {
-                url += `city=${location.city}&country=${location.country}`;
-            }
 
-            // Add settings params
-            if (typeof window !== 'undefined') {
-                const method = localStorage.getItem('settings_method') || '1';
-                const madhab = localStorage.getItem('settings_madhab') || '1';
-                url += `&method=${method}&madhab=${madhab}`;
-            }
 
-            const response = await fetch(url);
-            const result = await response.json();
-
-            if (result.success) {
-                setPrayerData(result.data);
-                setError(null);
-            } else {
-                setError('নামাজের সময় লোড করতে ব্যর্থ হয়েছে');
-            }
-        } catch (err) {
-            setError('নামাজের সময় লোড করতে ব্যর্থ হয়েছে');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const prayerNamesBn: { [key: string]: string } = {
-        'Fajr': 'ফজর',
-        'Dhuhr': 'জোহর',
-        'Asr': 'আসর',
-        'Maghrib': 'মাগরিব',
-        'Isha': 'ইশা'
-    };
-
-    const updateNextPrayer = () => {
+    const updateNextPrayer = useCallback(() => {
         if (!prayerData) return;
 
         const now = new Date();
@@ -211,7 +165,59 @@ export default function PrayerTimesPage() {
             name: 'ফজর',
             timeLeft: `${hoursLeft} ঘণ্টা ${minsLeft} মিনিট`
         });
-    };
+    }, [prayerData]);
+
+    useEffect(() => {
+        if (prayerData) {
+            updateNextPrayer();
+            const interval = setInterval(updateNextPrayer, 60000);
+            return () => clearInterval(interval);
+        }
+    }, [prayerData, updateNextPrayer]);
+
+
+
+    const fetchPrayerTimes = useCallback(async () => {
+        try {
+            setLoading(true);
+            let url = '/api/prayer-times?';
+
+            if (location.lat && location.lng) {
+                url += `lat=${location.lat}&lng=${location.lng}`;
+            } else {
+                url += `city=${location.city}&country=${location.country}`;
+            }
+
+            // Add settings params
+            if (typeof window !== 'undefined') {
+                const method = localStorage.getItem('settings_method') || '1';
+                const madhab = localStorage.getItem('settings_madhab') || '1';
+                url += `&method=${method}&madhab=${madhab}`;
+            }
+
+            const response = await fetch(url);
+            const result = await response.json();
+
+            if (result.success) {
+                setPrayerData(result.data);
+                setError(null);
+            } else {
+                setError('নামাজের সময় লোড করতে ব্যর্থ হয়েছে');
+            }
+        } catch (err) {
+            setError('নামাজের সময় লোড করতে ব্যর্থ হয়েছে');
+        } finally {
+            setLoading(false);
+        }
+    }, [location]);
+
+    useEffect(() => {
+        if (!location.loading) {
+            fetchPrayerTimes();
+        }
+    }, [location, fetchPrayerTimes]);
+
+
 
     const formatTime = (time: string) => {
         const [hours, minutes] = time.split(':').map(Number);

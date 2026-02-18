@@ -47,7 +47,7 @@ async function fetchRawMonth(year: number, month: number): Promise<AladhanDate[]
 export async function getHijriMonth(year: number, month: number): Promise<AladhanDate[]> {
     const currentData = await fetchRawMonth(year, month);
 
-    if (ADJUSTMENT === 0) return currentData;
+
 
     try {
         let prevData: AladhanDate[] = [];

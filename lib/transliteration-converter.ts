@@ -263,3 +263,5 @@ export function getUccaron(surahNum: string | number, ayahNum: string | number, 
 
     return "উচ্চারণ পাওয়া যায়নি";
 }
+
+export const romanToBangla = romanToBanglaUccaron;

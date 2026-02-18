@@ -10,7 +10,7 @@ export default function QuranNotFound() {
                         Surah Not Found
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400 mb-8">
-                        The surah you're looking for doesn't exist. <br />
+                        The surah you&apos;re looking for doesn&apos;t exist. <br />
                         Please select a valid surah number (1-114).
                     </p>
                     <Link

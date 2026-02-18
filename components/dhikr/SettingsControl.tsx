@@ -2,14 +2,7 @@
 
 import React from 'react';
 import { Volume2, VolumeX, RotateCcw, Settings, History, Info } from 'lucide-react';
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet"; // Assuming Shadcn/UI sheet exists or I will create a simpler version if not.
+
 
 // Simplistic Custom Drawer Implementation since we might not have the Sheet component
 // If user has shadcn, we would use it. But to be safe, I'll build a custom drawer here using Framer Motion

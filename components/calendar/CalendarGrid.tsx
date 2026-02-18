@@ -94,7 +94,7 @@ export default function CalendarGrid({ days, currentMonth, onDateClick }: Calend
                                             <span>{toBanglaNumber(cell.date.hijri.day)}</span>
                                             {/* Localized Month Name */}
                                             <span className="opacity-80 font-normal hidden sm:inline">
-                                                {HIJRI_MONTHS_BANGLA.find(m => m.number === cell.date.hijri.month.number)?.bn || cell.date.hijri.month.en}
+                                                {HIJRI_MONTHS_BANGLA.find(m => m.number === cell.date!.hijri.month.number)?.bn || cell.date.hijri.month.en}
                                             </span>
                                         </div>
 

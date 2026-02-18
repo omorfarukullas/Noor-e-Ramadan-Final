@@ -41,7 +41,7 @@ export default async function TestSupabasePage() {
                             </div>
                             <p className="text-red-700 mb-2">Error: {error.message}</p>
                             <p className="text-sm text-red-600">
-                                Make sure you've run the database schema in Supabase. Check DATABASE_SETUP.md for instructions.
+                                Make sure you&apos;ve run the database schema in Supabase. Check DATABASE_SETUP.md for instructions.
                             </p>
                         </div>
                     ) : preferences && preferences.length > 0 ? (

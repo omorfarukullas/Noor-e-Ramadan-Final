@@ -31,7 +31,7 @@ export default async function SurahDetailPage({
     return (
         <div className="container mx-auto px-4 py-6">
             {/* Surah Header */}
-            <SurahHeader surah={surah} locale={locale} />
+            <SurahHeader surah={surah} />
 
             {/* Verses */}
             <div className="max-w-4xl mx-auto">

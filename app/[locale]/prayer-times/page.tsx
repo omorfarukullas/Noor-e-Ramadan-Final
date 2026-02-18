@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { PrayerDashboard } from '@/components/prayer/PrayerDashboard';
 import { getPrayerTimesByCity } from '@/lib/prayer-times';
 
 export default async function PrayerTimesPage() {
-    const t = useTranslations('prayer');
+    const t = await getTranslations('prayer');
 
     // Fetch prayer times for Dhaka (default)
     let prayerData;

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter }
-    from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import { Loader2, LogOut, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save } from 'lucide-react';
 
 export default function TrackerPage() {
@@ -37,22 +37,7 @@ export default function TrackerPage() {
         { key: 'isha_prayed', name: 'Isha', icon: '🌙' },
     ];
 
-    // Check Session and Fetch Data
-    useEffect(() => {
-        const checkUser = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                router.push('/login');
-                return;
-            }
-            setUser(session.user);
-            fetchDailyLog(session.user.id, date);
-            fetchWeeklyStats(session.user.id);
-        };
-        checkUser();
-    }, [router, date]);
-
-    const fetchDailyLog = async (userId: string, selectedDate: string) => {
+    const fetchDailyLog = useCallback(async (userId: string, selectedDate: string) => {
         setLoading(true);
         const { data, error } = await supabase
             .from('worship_logs')
@@ -97,9 +82,9 @@ export default function TrackerPage() {
             // Optionally insert row here, or just wait for first update
         }
         setLoading(false);
-    };
+    }, [supabase]);
 
-    const fetchWeeklyStats = async (userId: string) => {
+    const fetchWeeklyStats = useCallback(async (userId: string) => {
         const today = new Date();
         const lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 6);
@@ -137,7 +122,24 @@ export default function TrackerPage() {
             stats.push({ day: dayName, count });
         }
         setWeeklyStats(stats);
-    };
+    }, [supabase]);
+
+    // Check Session and Fetch Data
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                router.push('/login');
+                return;
+            }
+            setUser(session.user);
+            fetchDailyLog(session.user.id, date);
+            fetchWeeklyStats(session.user.id);
+        };
+        checkUser();
+    }, [router, date, supabase.auth, fetchDailyLog, fetchWeeklyStats]);
+
+
 
     const updateLog = async (updates: any) => {
         if (!user) return;
