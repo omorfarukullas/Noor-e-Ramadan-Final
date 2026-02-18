@@ -17,7 +17,22 @@ const amiri = Amiri({
 
 export const metadata: Metadata = {
     title: 'Noor e Ramadan - নূর এ রমজান',
-    description: 'Your Digital Islamic Companion - আপনার ডিজিটাল ইসলামিক সঙ্গী',
+    description: 'Your Digital Islamic Companion - Quran, Prayer Times, Hadith, Tasbih & more | আপনার ডিজিটাল ইসলামিক সঙ্গী',
+    manifest: '/manifest.json',
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'black-translucent',
+        title: 'Noor e Ramadan',
+    },
+    formatDetection: {
+        telephone: false,
+    },
+    openGraph: {
+        type: 'website',
+        title: 'Noor e Ramadan - নূর এ রমজান',
+        description: 'Your Digital Islamic Companion for Ramadan',
+        siteName: 'Noor e Ramadan',
+    },
 };
 
 export default function RootLayout({
@@ -30,6 +45,9 @@ export default function RootLayout({
             <head>
                 <link rel="manifest" href="/manifest.json" />
                 <meta name="theme-color" content="#059669" />
+                <link rel="apple-touch-icon" href="/icon-192x192.png" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+                <meta name="mobile-web-app-capable" content="yes" />
             </head>
             <body className={`${inter.variable} ${hindSiliguri.variable} ${amiri.variable} antialiased`}>
                 <div className="min-h-screen">
