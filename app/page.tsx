@@ -36,6 +36,8 @@ export default function HomePage() {
                         <FeatureBox icon="📿" title="Dhikr Counter" status="✅" />
                         <FeatureBox icon="🙏" title="Namaz Guide" status="✅" />
                         <FeatureBox icon="📅" title="Islamic Calendar" status="✅" />
+                        <FeatureBox icon="🌙" title="Ramadan Calendar" status="✅" />
+                        <FeatureBox icon="🧭" title="Qibla Compass" status="✅" />
                     </div>
                 </div>
 
@@ -69,6 +71,8 @@ function FeatureBox({ icon, title, status }: { icon: string; title: string; stat
         'Dhikr Counter': '/dhikr',
         'Namaz Guide': '/namaz',
         'Islamic Calendar': '/calendar',
+        'Ramadan Calendar': '/ramadan',
+        'Qibla Compass': '/qibla',
     };
 
     const isClickable = title in routes;
