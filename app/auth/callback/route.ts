@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
     // if "next" is in param, use it as the redirect URL
-    const next = searchParams.get('next') ?? '/';
+    const next = searchParams.get('next') ?? '/tracker';
     // Clean up next path to avoid double slashes if getURL returns trailing slash
     const nextPath = next.startsWith('/') ? next.slice(1) : next;
 
