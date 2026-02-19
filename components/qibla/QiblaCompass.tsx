@@ -87,6 +87,17 @@ export default function QiblaCompass() {
     }, [handleOrientation]);
 
 
+    // Check if aligned with Qibla (tolerance of +/- 3 degrees)
+    const isAligned = heading !== null && qiblaDirection !== null &&
+        Math.abs(((heading - qiblaDirection + 540) % 360) - 180) < 5;
+
+    // Haptic feedback on alignment
+    useEffect(() => {
+        if (isAligned && typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    }, [isAligned]);
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center p-10 text-center">
@@ -134,105 +145,148 @@ export default function QiblaCompass() {
 
     return (
         <div className="flex flex-col items-center justify-center py-8">
-            <div className="relative w-72 h-72 md:w-96 md:h-96">
-                {/* Decoration: Outer Glow */}
-                <div className="absolute inset-4 rounded-full bg-emerald-500/20 blur-3xl animate-pulse"></div>
+            <div className="relative w-80 h-80 md:w-[400px] md:h-[400px]">
+                {/* Decoration: Outer Glow that changes color on alignment */}
+                <div className={cn(
+                    "absolute inset-0 rounded-full blur-3xl transition-all duration-700",
+                    isAligned ? "bg-emerald-400/30 scale-110" : "bg-emerald-500/10"
+                )}></div>
+
+                {/* Fixed Forward Indicator (Phone Top) */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
+                    <div className={cn(
+                        "w-5 h-5 rounded-full border-2 border-white shadow-lg transition-colors duration-300",
+                        isAligned ? "bg-emerald-500 shadow-emerald-500/50 scale-110" : "bg-red-500 shadow-red-500/50"
+                    )}></div>
+                    <div className={cn(
+                        "w-0.5 h-8 bg-gradient-to-b transition-colors duration-300",
+                        isAligned ? "from-emerald-500 to-transparent" : "from-red-500 to-transparent"
+                    )}></div>
+                </div>
 
                 {/* Compass Container - Rotates with device */}
                 <div
                     className="absolute inset-0 w-full h-full transition-transform duration-500 ease-out will-change-transform"
                     style={{ transform: `rotate(${rotation}deg)` }}
                 >
-                    {/* 1. Outer Gold Bezel */}
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-200 p-2 shadow-[0_0_30px_rgba(234,179,8,0.3)] relative">
-                        {/* Inner Bezel Shadow */}
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-yellow-600 to-yellow-100 p-1 shadow-inner">
-                            {/* 2. Main Dial Face */}
-                            <div className="w-full h-full rounded-full bg-[conic-gradient(at_center,_var(--tw-gradient-stops))] from-emerald-900 via-emerald-800 to-emerald-950 shadow-inner relative overflow-hidden border-4 border-yellow-500/50">
+                    {/* Outer Bezel */}
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-200 via-gray-400 to-gray-100 p-1.5 shadow-2xl relative">
+                        {/* Inner Bezel with Success State Glow */}
+                        <div className={cn(
+                            "w-full h-full rounded-full p-2 relative transition-all duration-500",
+                            isAligned
+                                ? "bg-gradient-to-br from-emerald-600 to-teal-700 shadow-[0_0_40px_rgba(16,185,129,0.4)]"
+                                : "bg-gradient-to-br from-emerald-900 to-emerald-950"
+                        )}>
 
-                                {/* Background Pattern (Subtle grid/circles) */}
-                                <div className="absolute inset-0 opacity-20">
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(255,255,255,0.1)_31%,_transparent_32%)] bg-[length:40px_40px]"></div>
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_60%,_rgba(255,255,255,0.05)_61%,_transparent_62%)] bg-[length:100%_100%]"></div>
-                                </div>
-
-                                {/* Degree Ticks */}
-                                {[...Array(72)].map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className={cn(
-                                            "absolute top-0 left-1/2 -translate-x-1/2 origin-bottom h-[50%] pt-1",
-                                            i % 9 === 0 ? "w-1" : "w-0.5 opacity-40"
-                                        )}
-                                        style={{ transform: `rotate(${i * 5}deg)` }}
-                                    >
-                                        <div className={cn(
-                                            "rounded-full",
-                                            i % 9 === 0 ? "h-3 bg-yellow-400 shadow-[0_0_5px_rgba(250,204,21,0.8)]" : "h-1.5 bg-emerald-200"
-                                        )}></div>
-                                    </div>
-                                ))}
-
-                                {/* 3. Qibla Pointer (The Kaaba) */}
-                                {qiblaDirection !== null && (
-                                    <div
-                                        className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-16 origin-center z-20"
-                                        style={{ transform: `rotate(${kaabaRotation}deg)` }}
-                                    >
-                                        {/* The Pointer Arm */}
-                                        <div className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                                            {/* Kaaba Icon */}
-                                            <div className="relative group">
-                                                <div className="absolute -inset-4 bg-yellow-400/20 rounded-full blur-xl group-hover:bg-yellow-400/40 transition-all duration-500"></div>
-                                                <div className="w-14 h-14 bg-black rounded-lg border border-gray-800 relative shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 flex items-center justify-center">
-                                                    {/* Gold Band on Kaaba */}
-                                                    <div className="absolute top-3 inset-x-0 h-2 bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-300 opacity-90"></div>
-                                                    {/* Door */}
-                                                    <div className="absolute bottom-2 right-3 w-3 h-5 bg-yellow-600 rounded-t-sm opacity-60"></div>
-                                                </div>
-                                                {/* Triangle Pointer below Kaaba */}
-                                                <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-yellow-400 mx-auto mt-1 filter drop-shadow"></div>
-                                            </div>
-
-                                            {/* Beam/Line to Center */}
-                                            <div className="w-0.5 h-24 bg-gradient-to-b from-yellow-400/50 to-transparent mt-2"></div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Center Cap */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-600 to-yellow-300 shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-30 border-2 border-yellow-100 flex items-center justify-center">
-                                    <div className="w-2 h-2 bg-emerald-900 rounded-full"></div>
-                                </div>
-
+                            {/* Direction Markers (N, E, S, W) - Fixed on dial */}
+                            <div className="absolute inset-4 text-emerald-100/30 font-bold text-lg select-none">
+                                <span className="absolute top-0 left-1/2 -translate-x-1/2">N</span>
+                                <span className="absolute right-0 top-1/2 -translate-y-1/2">E</span>
+                                <span className="absolute bottom-0 left-1/2 -translate-x-1/2">S</span>
+                                <span className="absolute left-0 top-1/2 -translate-y-1/2">W</span>
                             </div>
+
+                            {/* Degree Ticks */}
+                            {[...Array(72)].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className={cn(
+                                        "absolute top-0 left-1/2 -translate-x-1/2 origin-bottom h-[50%] pt-2",
+                                        i % 9 === 0 ? "w-1" : "w-0.5 opacity-20"
+                                    )}
+                                    style={{ transform: `rotate(${i * 5}deg)` }}
+                                >
+                                    <div className={cn(
+                                        "rounded-full transition-colors duration-500",
+                                        i % 9 === 0
+                                            ? (isAligned ? "h-4 bg-white shadow-sm" : "h-4 bg-emerald-400")
+                                            : "h-2 bg-emerald-100"
+                                    )}></div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Fixed Indicator (User's Forward Direction) */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center">
-                    <div className="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.6)] border-2 border-white mb-1"></div>
-                    <div className="w-0.5 h-6 bg-gradient-to-b from-red-500 to-transparent"></div>
+                {/* Qibla Direction Arrow - Rotates with dial + offset */}
+                {qiblaDirection !== null && (
+                    <div
+                        className="absolute inset-0 w-full h-full z-40 transition-transform duration-500 ease-out will-change-transform pointer-events-none"
+                        style={{ transform: `rotate(${rotation + kaabaRotation}deg)` }}
+                    >
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-1/2 flex flex-col items-center justify-start pt-6">
+                            {/* Modern Arrow Needle */}
+                            <div className="relative flex flex-col items-center">
+                                {/* Success Glow */}
+                                {isAligned && (
+                                    <div className="absolute -inset-8 bg-emerald-400/30 rounded-full blur-2xl animate-pulse"></div>
+                                )}
+
+                                {/* Arrow Head */}
+                                <div className={cn(
+                                    "w-0 h-0 border-l-[16px] border-l-transparent border-r-[16px] border-r-transparent border-b-[40px] transition-all duration-300 drop-shadow-lg",
+                                    isAligned ? "border-b-emerald-400 scale-110" : "border-b-yellow-400"
+                                )}></div>
+
+                                {/* Arrow Body */}
+                                <div className={cn(
+                                    "w-2 h-[85px] -mt-1 bg-gradient-to-b from-yellow-400/80 to-transparent rounded-b-full",
+                                    isAligned ? "from-emerald-400/80" : "from-yellow-400/80"
+                                )}></div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Center Kaaba Logo (Fixed Upright) */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none">
+                    <div className={cn(
+                        "relative w-20 h-20 bg-black rounded-2xl border-2 border-gray-700 shadow-2xl flex items-center justify-center transition-transform duration-500",
+                        isAligned ? "scale-110 border-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.5)]" : "scale-100"
+                    )}>
+                        {/* Gold Band */}
+                        <div className="absolute top-3 inset-x-0 h-3 bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-300 opacity-90"></div>
+                        {/* Door */}
+                        <div className="absolute bottom-2 right-4 w-4 h-7 bg-yellow-600 rounded-t-sm opacity-80 border border-yellow-400/30"></div>
+
+                        {/* Center Pivot Dot */}
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full z-10 shadow-sm"></div>
+                    </div>
                 </div>
             </div>
 
-            <div className="mt-8 text-center bg-white/80 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-100 max-w-xs mx-auto">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                    <Navigation className="text-emerald-600" size={20} />
-                    <span className="text-gray-600 font-medium font-bengali">কিবলার দিক:</span>
-                    <span className="text-xl font-bold text-emerald-700 font-bengali">
+            <div className={cn(
+                "mt-8 text-center backdrop-blur-md rounded-2xl p-6 shadow-xl border transition-all duration-500 max-w-xs mx-auto",
+                isAligned
+                    ? "bg-emerald-600/90 border-emerald-400 text-white translate-y-[-4px]"
+                    : "bg-white/90 border-emerald-100 text-gray-800"
+            )}>
+                <div className="flex items-center justify-center gap-3 mb-2">
+                    <Navigation className={cn(
+                        "transition-colors",
+                        isAligned ? "text-white animate-bounce" : "text-emerald-600"
+                    )} size={24} />
+                    <span className="font-bold font-bengali text-lg">কিবলার দিক:</span>
+                    <span className="text-3xl font-black tabular-nums">
                         {Math.round(qiblaDirection || 0)}°
                     </span>
                 </div>
+
+                <p className={cn(
+                    "text-sm font-medium font-bengali transition-colors",
+                    isAligned ? "text-emerald-50" : "text-emerald-700"
+                )}>
+                    {isAligned
+                        ? "✨ আপনি সঠিক দিকে আছেন (কিবলা) ✨"
+                        : "কম্পাসটি কিবলার দিকে ঘোরান"}
+                </p>
+
                 {calibrationNeeded && (
-                    <p className="text-xs text-orange-500 mt-2 font-bengali animate-pulse">
-                        সঠিক ফলাফলের জন্য ফোনটি ৮ (Eight) আকৃতিতে ঘুরান
+                    <p className="text-[10px] uppercase tracking-widest text-orange-400 mt-4 font-bold animate-pulse">
+                        Phone Calibration Recommended [8-pattern]
                     </p>
                 )}
-                <p className="text-xs text-gray-400 mt-2 font-bengali">
-                    উত্তর দিক থেকে ঘড়ির কাঁটার দিকে হিসাব করা হয়েছে
-                </p>
             </div>
         </div>
     );
