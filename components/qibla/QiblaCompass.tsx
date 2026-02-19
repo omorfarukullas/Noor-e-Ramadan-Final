@@ -71,14 +71,19 @@ export default function QiblaCompass() {
         }
     };
 
+    // Safe Client-side Permission Check
     useEffect(() => {
-        // Initial check for non-iOS devices which might not need explicit permission request logic
-        // or just start listening if possible.
-        // However, best practice for iOS 13+ is to wait for user interaction.
-        // We'll auto-start if not iOS 13+
-        if (typeof (DeviceOrientationEvent as any).requestPermission !== 'function') {
-            setPermissionGranted(true);
-            window.addEventListener('deviceorientation', handleOrientation);
+        // Protect against server-side execution where DeviceOrientationEvent is undefined
+        if (typeof window !== 'undefined' && typeof DeviceOrientationEvent !== 'undefined') {
+            // Check if iOS 13+ permission API exists
+            if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+                // We need to ask for permission
+                // Don't set permissionGranted=true here.
+            } else {
+                // Non-iOS 13+ or Android - typically can just listen
+                setPermissionGranted(true);
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
         }
 
         return () => {
@@ -86,36 +91,21 @@ export default function QiblaCompass() {
         };
     }, [handleOrientation]);
 
+    // ... (rest of render)
 
-    // Check if aligned with Qibla (tolerance of +/- 3 degrees)
-    const isAligned = heading !== null && qiblaDirection !== null &&
-        Math.abs(((heading - qiblaDirection + 540) % 360) - 180) < 5;
-
-    // Haptic feedback on alignment
+    // Check for iOS 13+ Permission Requirement state safely
+    const [isIOSPermissionRequired, setIsIOSPermissionRequired] = useState(false);
     useEffect(() => {
-        if (isAligned && typeof navigator !== 'undefined' && navigator.vibrate) {
-            navigator.vibrate(50);
+        if (typeof window !== 'undefined' && typeof DeviceOrientationEvent !== 'undefined'
+            && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+            setIsIOSPermissionRequired(true);
         }
-    }, [isAligned]);
+    }, []);
 
-    // Non-blocking Permission/Loading Logic
-    if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center p-10 text-center bg-red-50 rounded-xl border border-red-100">
-                <AlertCircle className="text-red-500 mb-4" size={40} />
-                <p className="text-red-700 font-medium">{error}</p>
-                <button
-                    onClick={() => window.location.reload()}
-                    className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                >
-                    পুনরায় চেষ্টা করুন
-                </button>
-            </div>
-        );
-    }
+    // ...
 
     // Permission request needed (iOS) - Show explicit button only if we can't auto-start
-    if (!permissionGranted && typeof (DeviceOrientationEvent as any).requestPermission === 'function' && !heading) {
+    if (!permissionGranted && isIOSPermissionRequired && !heading) {
         return (
             <div className="flex flex-col items-center justify-center p-10 text-center bg-emerald-50 rounded-xl border border-emerald-100">
                 <Compass className="text-emerald-600 mb-4" size={48} />
