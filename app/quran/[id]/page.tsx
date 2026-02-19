@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getSurahById } from '@/lib/quran-api';
 import SurahHeader from '@/components/quran/SurahHeader';
 import VerseDisplay from '@/components/quran/VerseDisplay';
+import DownloadButton from '@/components/quran/DownloadButton';
 
 // export const dynamic = 'force-static'; // Removed to enable ISR
 export const revalidate = 86400; // Revalidate daily
@@ -35,7 +36,7 @@ export default async function SurahDetailPage({
             {/* Surah Header */}
             <SurahHeader surah={surah} />
 
-            {/* Verses */} {/* Previous simple layout */}
+            {/* Verses */}
             <div className="max-w-4xl mx-auto">
                 {surah.verses.map((verse) => (
                     <VerseDisplay key={verse.number} verse={verse} />

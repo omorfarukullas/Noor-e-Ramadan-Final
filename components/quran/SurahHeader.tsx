@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { SurahDetail } from '@/types/quran';
+import DownloadButton from './DownloadButton';
 
 interface SurahHeaderProps {
     surah: SurahDetail;
@@ -10,9 +11,9 @@ export default function SurahHeader({ surah }: SurahHeaderProps) {
     const nextSurah = surah.number < 114 ? surah.number + 1 : null;
 
     return (
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-800 dark:to-teal-800 rounded-xl shadow-xl p-8 mb-8 text-white">
-            {/* Back to list button */}
-            <div className="mb-6">
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-800 dark:to-teal-800 rounded-xl shadow-xl p-8 mb-8 text-white relative">
+            {/* Navigation & Actions */}
+            <div className="flex items-center justify-between mb-6">
                 <Link
                     href="/quran"
                     className="inline-flex items-center text-white hover:text-emerald-100 transition-colors"
@@ -32,6 +33,8 @@ export default function SurahHeader({ surah }: SurahHeaderProps) {
                     </svg>
                     সূরা তালিকায় ফিরে যান
                 </Link>
+
+                <DownloadButton surahId={surah.number} initialData={surah} />
             </div>
 
             {/* Surah info */}

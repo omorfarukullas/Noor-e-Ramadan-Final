@@ -16,6 +16,10 @@ function getParentPath(pathname: string): string {
     return '/';
 }
 
+import NotificationManager from '../notifications/NotificationManager';
+
+// ... imports remain the same
+
 export function Header() {
     const router = useRouter();
     const pathname = usePathname();
@@ -42,6 +46,11 @@ export function Header() {
                     <Link href="/" className="text-xl font-bold text-primary-700 dark:text-primary-400 font-bengali">
                         নূর এ রমজান
                     </Link>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2">
+                    <NotificationManager />
                 </div>
             </div>
         </header>

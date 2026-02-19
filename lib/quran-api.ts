@@ -59,6 +59,21 @@ export async function getAllSurahs(): Promise<Surah[]> {
  * Uses 3-edition endpoint for efficiency
  */
 export async function getSurahWithTranslations(surahNumber: number): Promise<SurahDetail> {
+    // Check allow local DB only on client side
+    if (typeof window !== 'undefined') {
+        try {
+            const { db } = await import('./db');
+            const localSurah = await db.surahs.get(surahNumber);
+            if (localSurah) {
+                console.log(`Loaded Surah ${surahNumber} from local DB`);
+                return localSurah;
+            }
+        } catch (dbError) {
+            console.warn('Failed to load from local DB:', dbError);
+            // Fallback to API
+        }
+    }
+
     try {
         // Fetch 3 editions in one call: Arabic, Roman Transliteration, Bengali Meaning
         const response = await fetchWithRetry(`${ALQURAN_API_BASE}/surah/${surahNumber}/editions/quran-uthmani,en.transliteration,bn.bengali`, 5, 2000);
@@ -94,7 +109,7 @@ export async function getSurahWithTranslations(surahNumber: number): Promise<Sur
             };
         });
 
-        return {
+        const surahDetail: SurahDetail = {
             number: metadata.number,
             name: metadata.name,
             englishName: metadata.englishName,
@@ -104,6 +119,9 @@ export async function getSurahWithTranslations(surahNumber: number): Promise<Sur
             verses,
             bismillahPre: false,
         };
+
+        return surahDetail;
+
     } catch (error) {
         console.error(`Error fetching surah ${surahNumber}:`, error);
         throw error;
