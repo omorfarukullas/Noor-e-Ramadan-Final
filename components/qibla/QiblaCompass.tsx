@@ -91,6 +91,17 @@ export default function QiblaCompass() {
         };
     }, [handleOrientation]);
 
+    // Check if aligned with Qibla (tolerance of +/- 3 degrees)
+    const isAligned = heading !== null && qiblaDirection !== null &&
+        Math.abs(((heading - qiblaDirection + 540) % 360) - 180) < 5;
+
+    // Haptic feedback on alignment
+    useEffect(() => {
+        if (isAligned && typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    }, [isAligned]);
+
     // ... (rest of render)
 
     // Check for iOS 13+ Permission Requirement state safely
