@@ -4,11 +4,36 @@ import { getUccaron } from './transliteration-converter';
 const ALQURAN_API_BASE = 'https://api.alquran.cloud/v1';
 
 /**
+ * Helper function to fetch with retry logic
+ */
+async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<Response> {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url);
+            if (response.ok) return response;
+            if (response.status === 429) { // Too Many Requests
+                console.warn(`Rate limited (429). Retrying in ${delay}ms...`);
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2; // Exponential backoff
+                continue;
+            }
+            throw new Error(`Request failed with status ${response.status}`);
+        } catch (error) {
+            if (i === retries - 1) throw error;
+            console.warn(`Fetch failed. Retrying in ${delay}ms...`);
+            await new Promise(res => setTimeout(res, delay));
+            delay *= 2;
+        }
+    }
+    throw new Error('All retries failed');
+}
+
+/**
  * Fetch all surahs (chapters) metadata
  */
 export async function getAllSurahs(): Promise<Surah[]> {
     try {
-        const response = await fetch(`${ALQURAN_API_BASE}/surah`);
+        const response = await fetchWithRetry(`${ALQURAN_API_BASE}/surah`);
         const data = await response.json();
 
         if (data.code === 200 && data.data) {
@@ -36,7 +61,7 @@ export async function getAllSurahs(): Promise<Surah[]> {
 export async function getSurahWithTranslations(surahNumber: number): Promise<SurahDetail> {
     try {
         // Fetch 3 editions in one call: Arabic, Roman Transliteration, Bengali Meaning
-        const response = await fetch(`${ALQURAN_API_BASE}/surah/${surahNumber}/editions/quran-uthmani,en.transliteration,bn.bengali`);
+        const response = await fetchWithRetry(`${ALQURAN_API_BASE}/surah/${surahNumber}/editions/quran-uthmani,en.transliteration,bn.bengali`, 5, 2000);
         const data = await response.json();
 
         if (data.code !== 200 || !data.data || data.data.length < 3) {
@@ -63,12 +88,7 @@ export async function getSurahWithTranslations(surahNumber: number): Promise<Sur
                 transliteration: romanText,
                 transliterationBn: banglaUccaron, // The star feature
                 translation: {
-                    en: '', // We dropped English translation to keep it simple as per request, or we could fetch it if needed. 
-                    // The request said "No other new features needed. Only focus on perfect উচ্চারণ."
-                    // But usually users want English translation. 
-                    // Re-reading user request: "Toggle buttons: [আরবি ✓] [উচ্চারণ ✓] [অনুবাদ ✓]" -> This likely means Bangla translation.
-                    // I will leave English empty or fetch it if I had 4 slots. 
-                    // For now, let's stick to the 3 critical layers requested.
+                    en: '', // Still empty as per design
                     bn: bengaliMeaning,
                 },
             };
@@ -82,12 +102,7 @@ export async function getSurahWithTranslations(surahNumber: number): Promise<Sur
             numberOfAyahs: metadata.numberOfAyahs,
             revelationType: metadata.revelationType === 'Meccan' ? 'Meccan' : 'Medinan',
             verses,
-            bismillahPre: false, // The api.alquran.cloud includes Bismillah in the text for Surah 1, but for others? 
-            // Actually alquran.cloud Uthmani text handles Bismillah differently.
-            // Usually separate. let's set to false and rely on the text from API.
-            // Wait, standard behavior for Surah 1 is it's part of Verse 1.
-            // For others, it's usually pre-text. 
-            // Let's check logic: if text starts with Bismillah, it's there.
+            bismillahPre: false,
         };
     } catch (error) {
         console.error(`Error fetching surah ${surahNumber}:`, error);
