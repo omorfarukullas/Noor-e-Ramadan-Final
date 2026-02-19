@@ -202,10 +202,16 @@ export default function TrackerPage() {
 
     const completedPrayers = prayers.filter(p => counts[p.key as keyof typeof counts]).length;
 
-    if (loading && !user) {
+    if (loading || !user) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-green-50">
-                <Loader2 className="animate-spin text-green-600" size={40} />
+            <div className="min-h-screen flex flex-col items-center justify-center bg-green-50">
+                <Loader2 className="animate-spin text-green-600 mb-4" size={40} />
+                <p className="text-green-800 font-medium animate-pulse">
+                    আপনার প্রোফাইল লোড হচ্ছে... (Loading Profile)
+                </p>
+                <p className="text-xs text-green-600 mt-2">
+                    Please wait... checking session
+                </p>
             </div>
         );
     }

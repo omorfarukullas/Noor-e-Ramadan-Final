@@ -17,13 +17,17 @@ export async function GET(request: Request) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error) {
-            console.log('Auth success, redirecting to:', `${getURL()}${nextPath}`);
-            return NextResponse.redirect(`${getURL()}${nextPath}`);
+            console.log('✅ Auth success, FORCE redirecting to tracker');
+            // Hardcoded to /tracker to rule out any 'next' param issues
+            // Using absolute URL constructed from getURL()
+            const target = `${getURL()}tracker`;
+            console.log('Target URL:', target);
+            return NextResponse.redirect(target);
         } else {
-            console.error('Auth error during exchange:', error);
+            console.error('❌ Auth error during exchange:', error);
         }
     } else {
-        console.error('No code found in callback URL');
+        console.error('❌ No code found in callback URL');
     }
 
     // return the user to an error page with instructions
