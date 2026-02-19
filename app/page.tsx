@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 // Feature data structure with names and routes
 const features = [
     { icon: "🕌", title: "নামাজের সময়সূচী", route: "/prayer-times" },
@@ -54,12 +56,12 @@ export default function HomePage() {
                     <p className="text-green-100 mb-3">
                         সকল ফিচার এখন প্রস্তুত
                     </p>
-                    <a
+                    <Link
                         href="/settings"
                         className="inline-block bg-white text-green-700 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition-colors"
                     >
                         ⚙️ সেটিংস
-                    </a>
+                    </Link>
                 </div>
             </div>
         </main>
@@ -77,11 +79,11 @@ function FeatureBox({ icon, title, route }: { icon: string; title: string; route
     );
 
     return (
-        <a
+        <Link
             href={route}
             className="block bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border-2 border-green-300 hover:border-green-500 hover:shadow-lg transition-all cursor-pointer"
         >
             {content}
-        </a>
+        </Link>
     );
 }

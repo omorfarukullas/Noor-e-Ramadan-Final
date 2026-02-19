@@ -6,7 +6,7 @@ import { fetchNearbyMosques, Mosque } from '@/lib/mosque-api';
 import MosqueList from '@/components/mosque/MosqueList';
 
 // Dynamically import map to avoid SSR issues
-const MosqueMap = dynamic(() => import('@/components/mosque/MosqueMap'), {
+const MosqueMap = dynamic(() => import('../../components/mosque/MosqueMap'), {
     ssr: false,
     loading: () => <div className="h-96 w-full bg-slate-100 animate-pulse rounded-2xl flex items-center justify-center text-gray-400">ম্যাপ লোড হচ্ছে...</div>
 });

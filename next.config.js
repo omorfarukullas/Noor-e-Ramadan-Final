@@ -15,7 +15,7 @@ const withPWA = require('next-pwa')({
         },
         {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-            handler: 'NetworkFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
                 cacheName: 'supabase-cache',
                 expiration: { maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 },
