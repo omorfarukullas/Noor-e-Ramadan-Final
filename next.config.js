@@ -3,7 +3,7 @@ const withPWA = require('next-pwa')({
     dest: 'public',
     register: true,
     skipWaiting: true,
-    disable: process.env.NODE_ENV === 'development',
+    disable: false, // Force enable for local verification
     runtimeCaching: [
         {
             urlPattern: /^https:\/\/everyayah\.com\/.*/i,
