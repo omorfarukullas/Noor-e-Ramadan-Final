@@ -3,14 +3,11 @@ import { getSurahById } from '@/lib/quran-api';
 import SurahHeader from '@/components/quran/SurahHeader';
 import VerseDisplay from '@/components/quran/VerseDisplay';
 
-export const dynamic = 'force-static';
+// export const dynamic = 'force-static'; // Removed to enable ISR
 export const revalidate = 86400; // Revalidate daily
+export const dynamicParams = true; // Allow dynamic params (default)
 
-export async function generateStaticParams() {
-    return Array.from({ length: 114 }, (_, i) => ({
-        id: String(i + 1),
-    }));
-}
+// export async function generateStaticParams() { ... } // Removed to avoid build timeout
 
 export default async function SurahDetailPage({
     params,

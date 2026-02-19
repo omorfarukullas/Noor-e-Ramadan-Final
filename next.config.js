@@ -52,6 +52,7 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: false,
     },
+    staticPageGenerationTimeout: 180,
 };
 
 module.exports = withPWA(nextConfig);
