@@ -15,9 +15,15 @@ export async function GET(request: Request) {
         const cookieStore = cookies();
         const supabase = createClient(cookieStore);
         const { error } = await supabase.auth.exchangeCodeForSession(code);
+
         if (!error) {
+            console.log('Auth success, redirecting to:', `${getURL()}${nextPath}`);
             return NextResponse.redirect(`${getURL()}${nextPath}`);
+        } else {
+            console.error('Auth error during exchange:', error);
         }
+    } else {
+        console.error('No code found in callback URL');
     }
 
     // return the user to an error page with instructions
