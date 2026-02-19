@@ -98,15 +98,7 @@ export default function QiblaCompass() {
         }
     }, [isAligned]);
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center p-10 text-center">
-                <Loader2 className="animate-spin text-emerald-600 mb-4" size={40} />
-                <p className="text-gray-600">অবস্থান নির্ণয় করা হচ্ছে...</p>
-            </div>
-        );
-    }
-
+    // Non-blocking Permission/Loading Logic
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center p-10 text-center bg-red-50 rounded-xl border border-red-100">
@@ -122,7 +114,8 @@ export default function QiblaCompass() {
         );
     }
 
-    if (!permissionGranted && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+    // Permission request needed (iOS) - Show explicit button only if we can't auto-start
+    if (!permissionGranted && typeof (DeviceOrientationEvent as any).requestPermission === 'function' && !heading) {
         return (
             <div className="flex flex-col items-center justify-center p-10 text-center bg-emerald-50 rounded-xl border border-emerald-100">
                 <Compass className="text-emerald-600 mb-4" size={48} />
@@ -277,9 +270,11 @@ export default function QiblaCompass() {
                     "text-sm font-medium font-bengali transition-colors",
                     isAligned ? "text-emerald-50" : "text-emerald-700"
                 )}>
-                    {isAligned
-                        ? "✨ আপনি সঠিক দিকে আছেন (কিবলা) ✨"
-                        : "কম্পাসটি কিবলার দিকে ঘোরান"}
+                    {loading
+                        ? "অবস্থান নির্ণয় করা হচ্ছে..."
+                        : isAligned
+                            ? "✨ আপনি সঠিক দিকে আছেন (কিবলা) ✨"
+                            : "কম্পাসটি কিবলার দিকে ঘোরান"}
                 </p>
 
                 {calibrationNeeded && (

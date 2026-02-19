@@ -70,7 +70,7 @@ export default function TasbihCounter({ dhikrs }: TasbihCounterProps) {
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-100px)] bg-slate-50 relative font-sans">
+        <div className="flex flex-col relative font-sans">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5 pointer-events-none"
                 style={{ backgroundImage: 'radial-gradient(#059669 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
@@ -79,8 +79,8 @@ export default function TasbihCounter({ dhikrs }: TasbihCounterProps) {
             {/* Top Section: Selector */}
             <DhikrSelector dhikrs={dhikrs} selectedId={selectedId} onSelect={setSelectedId} />
 
-            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-200">
-                <div className="min-h-full flex flex-col items-center p-4 pb-32 max-w-xl mx-auto w-full">
+            <div className="">
+                <div className="flex flex-col items-center p-4 max-w-xl mx-auto w-full">
 
                     {/* Dhikr Info Card */}
                     <div className="w-full bg-white rounded-3xl p-6 shadow-sm border border-emerald-50 mb-6 text-center">
@@ -263,6 +263,8 @@ export default function TasbihCounter({ dhikrs }: TasbihCounterProps) {
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>

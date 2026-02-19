@@ -50,19 +50,6 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                {/* Footer/Status */}
-                <div className="bg-green-600 text-white rounded-xl p-6 text-center">
-                    <p className="text-2xl font-bold mb-2">আলহামদুলিল্লাহ!</p>
-                    <p className="text-green-100 mb-3">
-                        সকল ফিচার এখন প্রস্তুত
-                    </p>
-                    <Link
-                        href="/settings"
-                        className="inline-block bg-white text-green-700 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition-colors"
-                    >
-                        ⚙️ সেটিংস
-                    </Link>
-                </div>
             </div>
         </main>
     );

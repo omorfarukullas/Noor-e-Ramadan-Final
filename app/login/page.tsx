@@ -1,5 +1,6 @@
 'use client';
 
+import { getURL } from '@/utils/get-url';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,7 +17,7 @@ export default function LoginPage() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${location.origin}/auth/callback?next=/tracker`,
+                    redirectTo: `${getURL()}auth/callback?next=/tracker`,
                 },
             });
 
