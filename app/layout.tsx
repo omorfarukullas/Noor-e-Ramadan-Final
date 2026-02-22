@@ -3,6 +3,7 @@ import { Inter, Hind_Siliguri, Amiri } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/navigation/Header';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { JsonLd, websiteSchema, organizationSchema } from '@/components/seo/JsonLd';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const hindSiliguri = Hind_Siliguri({
@@ -17,8 +18,14 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-    title: 'Noor e Ramadan - নূর এ রমজান',
+    metadataBase: new URL('https://noor-e-ramadan-bd.vercel.app'),
+    title: {
+        default: 'Noor e Ramadan - নূর এ রমজান',
+        template: '%s | Noor e Ramadan'
+    },
     description: 'Your Digital Islamic Companion - Quran, Prayer Times, Hadith, Tasbih & more | আপনার ডিজিটাল ইসলামিক সঙ্গী',
+    keywords: ['Islamic App', 'Ramadan Calendar', 'Quran Online', 'Prayer Times Bangladesh', 'Qibla Direction', 'Hadith Bangla', 'Namaz Timing'],
+    authors: [{ name: 'Noor e Ramadan Team' }],
     manifest: '/manifest.json',
     appleWebApp: {
         capable: true,
@@ -33,7 +40,20 @@ export const metadata: Metadata = {
         title: 'Noor e Ramadan - নূর এ রমজান',
         description: 'Your Digital Islamic Companion for Ramadan',
         siteName: 'Noor e Ramadan',
+        url: 'https://noor-e-ramadan-bd.vercel.app',
     },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Noor e Ramadan - নূর এ রমজান',
+        description: 'Your Digital Islamic Companion for Ramadan',
+    },
+    alternates: {
+        canonical: '/',
+        languages: {
+            'bn': '/bn',
+            'en': '/en',
+        }
+    }
 };
 
 export default function RootLayout({
@@ -61,6 +81,10 @@ export default function RootLayout({
 
                 {/* Global PWA Install Prompt */}
                 <InstallPrompt />
+
+                {/* Global SEO Schemas */}
+                <JsonLd data={websiteSchema} />
+                <JsonLd data={organizationSchema} />
             </body>
         </html>
     );

@@ -3,8 +3,9 @@ import QiblaCompass from '@/components/qibla/QiblaCompass';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'কিবলা কম্পাস | নূর-ই-রমজান',
-    description: 'Find the Qibla direction accurately from your location.',
+    title: 'অনলাইন কিবলা কম্পাস | Find Qibla Direction Online',
+    description: 'আপনার অবস্থান থেকে মক্কার (কিবলা) বা কাবার সঠিক দিক নির্ণয় করুন সহজে। Find accurate Qibla (Kaaba) direction from anywhere.',
+    keywords: ['Qibla compass online', 'Find Qibla direction', 'Kaaba direction finder', 'Qibla locator', 'Mekka direction'],
 };
 
 export default function QiblaPage() {

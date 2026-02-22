@@ -1,4 +1,11 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'নূর এ রমজান | Noor e Ramadan',
+    description: 'আপনার ডিজিটাল ইসলামিক সঙ্গী। Digital Islamic Companion for Quran, Prayer Times, Hadith, Tasbih, and Ramadan Calendar in Bangladesh.',
+    keywords: ['Islamic App', 'Quran Online BD', 'Ramadan Calendar 2026', 'Prayer Times Bangladesh', 'Noor e Ramadan'],
+};
 
 // Feature data structure with names and routes
 const features = [

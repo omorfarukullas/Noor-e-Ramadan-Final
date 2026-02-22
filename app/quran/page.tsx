@@ -1,5 +1,13 @@
 import { getAllSurahs } from '@/lib/quran-api';
 import SurahCard from '@/components/quran/SurahCard';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'আল-কুরআন | Read Quran Online with Bangla Translation',
+    description: 'ইংরেজি এবং বাংলা অনুবাদসহ পবিত্র কুরআন পড়ুন। Read the Holy Quran online with English and Bengali translations and audio.',
+    keywords: ['Read Quran online', 'Quran with Bangla translation', 'Quran transliteration', 'Al Quran BD'],
+};
+
 
 export default async function QuranPage() {
     // Fetch all surahs
