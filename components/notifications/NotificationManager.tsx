@@ -24,6 +24,7 @@ export default function NotificationManager({ showLabel = false }: NotificationM
         if (permission === 'granted') {
             scheduleNextNotification();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [permission]);
 
     const scheduleNextNotification = async () => {

@@ -50,6 +50,19 @@ export default function HomePage() {
                     </div>
                 </div>
 
+                {/* Footer */}
+                <footer className="mt-12 mb-6 text-center border-t border-green-200 pt-8">
+                    <p className="text-gray-600 font-bengali mb-2">
+                        যে কোনো মতামত বা সমস্যার জন্য যোগাযোগ করুন
+                    </p>
+                    <a
+                        href="mailto:omor.farukh16@gmail.com"
+                        className="inline-flex items-center justify-center gap-2 text-green-700 font-medium hover:text-green-800 hover:underline bg-white px-4 py-2 rounded-full border border-green-300 shadow-sm transition-all"
+                    >
+                        <span>📧</span> omor.farukh16@gmail.com
+                    </a>
+                </footer>
+
             </div>
         </main>
     );

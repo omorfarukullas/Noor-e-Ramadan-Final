@@ -12,6 +12,7 @@ export default function QiblaCompass() {
     const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [calibrationNeeded, setCalibrationNeeded] = useState<boolean>(true);
+    const [sensorMissing, setSensorMissing] = useState<boolean>(false);
 
     // Get Location and Calculate Qibla Direction
     useEffect(() => {
@@ -71,7 +72,7 @@ export default function QiblaCompass() {
         }
     };
 
-    // Safe Client-side Permission Check
+    // Safe Client-side Permission Check & Sensor Timeout
     useEffect(() => {
         // Protect against server-side execution where DeviceOrientationEvent is undefined
         if (typeof window !== 'undefined' && typeof DeviceOrientationEvent !== 'undefined') {
@@ -90,6 +91,23 @@ export default function QiblaCompass() {
             window.removeEventListener('deviceorientation', handleOrientation);
         };
     }, [handleOrientation]);
+
+    // Missing Sensor Timeout Check
+    useEffect(() => {
+        let timeout: NodeJS.Timeout;
+        if (permissionGranted && heading === null) {
+            // If after 3.5 seconds of permission granted, we still have no heading, the device likely lacks a magnetometer
+            timeout = setTimeout(() => {
+                if (heading === null) {
+                    setSensorMissing(true);
+                }
+            }, 3500);
+        } else if (heading !== null) {
+            setSensorMissing(false);
+        }
+
+        return () => clearTimeout(timeout);
+    }, [permissionGranted, heading]);
 
     // Check if aligned with Qibla (tolerance of +/- 3 degrees)
     const isAligned = heading !== null && qiblaDirection !== null &&
@@ -130,6 +148,21 @@ export default function QiblaCompass() {
                 >
                     অনুমতি দিন Start Compass
                 </button>
+            </div>
+        );
+    }
+
+    if (sensorMissing) {
+        return (
+            <div className="flex flex-col items-center justify-center p-10 text-center bg-orange-50 rounded-xl border border-orange-200 shadow-sm max-w-sm mx-auto mt-8">
+                <AlertCircle className="text-orange-500 mb-4" size={48} />
+                <h3 className="text-xl font-bold text-orange-900 mb-2 font-bengali">সেন্সর অনুপস্থিত</h3>
+                <p className="text-orange-800 font-bengali mb-2 text-sm">
+                    দুঃখিত, আপনার ডিভাইসে কম্পাস (Magnetometer) সেন্সর নেই অথবা ব্রাউজারটি এটি সাপোর্ট করছে না।
+                </p>
+                <p className="text-orange-700/80 text-xs">
+                    Your device lacks a supported compass sensor or permission is blocked by the browser.
+                </p>
             </div>
         );
     }

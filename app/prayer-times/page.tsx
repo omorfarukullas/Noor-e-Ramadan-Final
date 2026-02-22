@@ -54,6 +54,29 @@ export default function PrayerTimesPage() {
         loading: false
     });
 
+    const fetchIpLocation = async () => {
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+            if (data && data.city) {
+                setLocation({
+                    city: data.city,
+                    country: data.country_name || 'Bangladesh',
+                    loading: false
+                });
+            } else {
+                throw new Error('IP Location failed');
+            }
+        } catch (error) {
+            console.error('IP Geolocation failed, using default location:', error);
+            setLocation({
+                city: 'Dhaka',
+                country: 'Bangladesh',
+                loading: false
+            });
+        }
+    };
+
     const detectLocation = useCallback(() => {
         // Check saved location first
         if (typeof window !== 'undefined') {
@@ -79,9 +102,8 @@ export default function PrayerTimesPage() {
         }
 
         // Fallback to geolocation
+        setLocation((prev: any) => ({ ...prev, loading: true }));
         if ('geolocation' in navigator) {
-            setLocation((prev: any) => ({ ...prev, loading: true }));
-
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
@@ -94,13 +116,8 @@ export default function PrayerTimesPage() {
                     });
                 },
                 (err) => {
-                    console.log('Geolocation denied, using default location:', err);
-                    // Default to Dhaka ONLY if GPS denied
-                    setLocation({
-                        city: 'Dhaka',
-                        country: 'Bangladesh',
-                        loading: false
-                    });
+                    console.log('Geolocation denied, trying IP-based fallback:', err);
+                    fetchIpLocation();
                 },
                 {
                     enableHighAccuracy: true,
@@ -109,12 +126,8 @@ export default function PrayerTimesPage() {
                 }
             );
         } else {
-            console.log('Geolocation not supported');
-            setLocation({
-                city: 'Dhaka',
-                country: 'Bangladesh',
-                loading: false
-            });
+            console.log('Geolocation not supported, trying IP-based fallback');
+            fetchIpLocation();
         }
     }, []);
 

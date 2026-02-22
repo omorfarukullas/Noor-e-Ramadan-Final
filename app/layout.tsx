@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Hind_Siliguri, Amiri } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/navigation/Header';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const hindSiliguri = Hind_Siliguri({
@@ -57,6 +58,9 @@ export default function RootLayout({
                     {/* Main Content */}
                     <main>{children}</main>
                 </div>
+
+                {/* Global PWA Install Prompt */}
+                <InstallPrompt />
             </body>
         </html>
     );
