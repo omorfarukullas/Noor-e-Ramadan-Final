@@ -1,5 +1,4 @@
 import { createClient } from '@/utils/supabase/server';
-import { getURL } from '@/utils/get-url';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
@@ -18,9 +17,9 @@ export async function GET(request: Request) {
 
         if (!error) {
             console.log('✅ Auth success, FORCE redirecting to tracker');
-            // Hardcoded to /tracker to rule out any 'next' param issues
-            // Using absolute URL constructed from getURL()
-            const target = `${getURL()}tracker`;
+            // Resolve the origin dynamically from the request URL to keep session cookies working
+            const requestUrl = new URL(request.url);
+            const target = `${requestUrl.origin}/tracker`;
             console.log('Target URL:', target);
             return NextResponse.redirect(target);
         } else {
@@ -31,5 +30,6 @@ export async function GET(request: Request) {
     }
 
     // return the user to an error page with instructions
-    return NextResponse.redirect(`${getURL()}auth/auth-code-error`);
+    const requestUrl = new URL(request.url);
+    return NextResponse.redirect(`${requestUrl.origin}/auth/auth-code-error`);
 }
