@@ -1,1 +1,101 @@
-if(!self.define){let e,a={};const s=(s,i)=>(s=new URL(s+".js",i).href,a[s]||new Promise(a=>{if("document"in self){const e=document.createElement("script");e.src=s,e.onload=a,document.head.appendChild(e)}else e=s,importScripts(s),a()}).then(()=>{let e=a[s];if(!e)throw new Error(`Module ${s} didn’t register its module`);return e}));self.define=(i,c)=>{const t=e||("document"in self?document.currentScript.src:"")||location.href;if(a[t])return;let n={};const r=e=>s(e,t),d={module:{uri:t},exports:n,require:r};a[t]=Promise.all(i.map(e=>d[e]||r(e))).then(e=>(c(...e),n))}}define(["./workbox-00a24876"],function(e){"use strict";importScripts(),self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"/_next/app-build-manifest.json",revision:"2ea6e9130791f7ed7cb1252de044cd57"},{url:"/_next/static/chunks/2117-facfd796f830eb12.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/2515-f31f6f81fe48c502.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/2586-5380138f8cd82038.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/2972-0c1717b8acfdc204.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/4476-53cb9af4bb93bf6f.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/5570-a0d9daf7ac7588e6.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/5692-8c39079519c8ec88.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/6000-1163a93cadf1fd14.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/6918.cee8fc3987e80f89.js",revision:"cee8fc3987e80f89"},{url:"/_next/static/chunks/7301-2846cb64b40504d2.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/8452-a78fd37a5b3ad528.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/8590-fd9cb9138398f62e.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/duas/page-0c9ad4bf3f595efb.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/hadith/page-0d5a3ed728f64436.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/layout-3c20cbf48cfa08cd.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/more/page-8bc44d6239a7968e.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/mosques/page-3c00e8a90690ed7a.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/page-a1e1652099da19af.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/prayer-times/page-e0b9dc31e048033b.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/quran/%5Bid%5D/loading-8e52e285e5b02419.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/quran/%5Bid%5D/not-found-d9fb72c4457ac846.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/quran/%5Bid%5D/page-d5a9de5c16f0f0d1.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/quran/loading-f235d5be631a68ce.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/quran/page-44511e4378f03816.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/%5Blocale%5D/tracker/page-ab2d8d37733ddde1.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/_not-found/page-a2e846b8cdf5aa0b.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/auth/auth-code-error/page-18cca4e934de07ae.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/calendar/page-b23b44750d100b4f.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/dhikr/page-7b213553ef540783.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/duas/%5Bcategory%5D/page-1b4cba96cda3fb94.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/duas/page-9d41dc7dac0ebe90.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/hadith/%5BbookId%5D/page-cedd6c46211afe9e.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/hadith/page-33b94aab8ec46a65.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/layout-9578d76985ce9eae.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/login/page-3f3c21815c3ae166.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/mosques/page-6dfbcb40e11651e1.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/namaz/page-53471b38dd74590e.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/page-84f1c730241b6238.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/prayer-times/page-538fb27e66041623.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/qibla/page-18734ae1c6fd4e5a.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/quran/%5Bid%5D/page-4207e368d8e2315e.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/quran/page-a6eff12bc346f95a.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/ramadan/page-23d0a8bfe1a6e4aa.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/settings/page-23a1dc91796b96b6.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/test-db/page-0b3bb41aa6206c56.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/app/tracker/page-a9ea600e261e57f2.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/d0deef33.e0722780845cf21c.js",revision:"e0722780845cf21c"},{url:"/_next/static/chunks/fd9d1056-a81371f087f4d64b.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/framework-a63c59c368572696.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/main-27a2c354b9b03b22.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/main-app-87d64214fba0e5e7.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/pages/_app-78ddf957b9a9b996.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/pages/_error-7ce03bcf1df914ce.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/chunks/polyfills-42372ed130431b0a.js",revision:"846118c33b2c0e922d7b3a7676f81f6f"},{url:"/_next/static/chunks/webpack-595d44782cc007c8.js",revision:"sYiy9kgzzhG5IS6a3wblZ"},{url:"/_next/static/css/236ea6f7ae988587.css",revision:"236ea6f7ae988587"},{url:"/_next/static/css/fc1c9daac70c093b.css",revision:"fc1c9daac70c093b"},{url:"/_next/static/media/19cfc7226ec3afaa-s.woff2",revision:"9dda5cfc9a46f256d0e131bb535e46f8"},{url:"/_next/static/media/1abc4acc3608ccdd-s.p.woff2",revision:"fa350df6fa05514c44dc15d762384c28"},{url:"/_next/static/media/21350d82a1f187e9-s.woff2",revision:"4e2553027f1d60eff32898367dd4d541"},{url:"/_next/static/media/3f70dd7dc665a918-s.woff2",revision:"d8667ee353e1454b2079029c1ca2575a"},{url:"/_next/static/media/5aae3a1c1074c5e1-s.p.woff2",revision:"bd662c02bb48a6acc80e8a0ed015faa8"},{url:"/_next/static/media/88f8bd08eee39201-s.p.woff2",revision:"29f601366cc20000e20be564dc1d3873"},{url:"/_next/static/media/8c2fd50d66d22a18-s.woff2",revision:"cea212934e8714595307115a6b889450"},{url:"/_next/static/media/8e9860b6e62d6359-s.woff2",revision:"01ba6c2a184b8cba08b0d57167664d75"},{url:"/_next/static/media/96401ae653786a7e-s.woff2",revision:"b35f88dd59da7e33b215b0d800a759c3"},{url:"/_next/static/media/9c79641216ce8622-s.woff2",revision:"64001b31bd65eaf2517849769d238692"},{url:"/_next/static/media/a2026c2855f26d92-s.p.woff2",revision:"f972cf2e6ef91fd1591dec067351dc5d"},{url:"/_next/static/media/a29312ee6c3787aa-s.woff2",revision:"00156de715db18014b50952a9881b4ed"},{url:"/_next/static/media/a9362c7696318d6d-s.woff2",revision:"b36a9db584f2638f8555cb698d0c36e8"},{url:"/_next/static/media/b74fc4adaa0fed39-s.woff2",revision:"214fe7a22536ce096ef062e3808c707f"},{url:"/_next/static/media/b799e40d1da4cba6-s.p.woff2",revision:"3a7300a2f4a4ffe86fd6b9f541cf649c"},{url:"/_next/static/media/ba9851c3c22cd980-s.woff2",revision:"9e494903d6b0ffec1a1e14d34427d44d"},{url:"/_next/static/media/bb185c3b111b9a6e-s.woff2",revision:"9ad68cbfaf66456becdf59a96c2e4b6b"},{url:"/_next/static/media/c5fe6dc8356a8c31-s.woff2",revision:"027a89e9ab733a145db70f09b8a18b42"},{url:"/_next/static/media/d2f8c81c8882f57c-s.woff2",revision:"36d654b073ad937fd611636238411568"},{url:"/_next/static/media/d550ab7c3b0775b5-s.woff2",revision:"d538c22144c3277575c29ac06f28eb1d"},{url:"/_next/static/media/da6e5417d357d163-s.p.woff2",revision:"dcbe32484b7cdc076ca2dc7e7b04df6d"},{url:"/_next/static/media/dd5f2241e050216b-s.woff2",revision:"a5e2ba3207c491e457dde29e899d7a8a"},{url:"/_next/static/media/df0a9ae256c0569c-s.woff2",revision:"d54db44de5ccb18886ece2fda72bdfe0"},{url:"/_next/static/media/e1ea3edaff836893-s.woff2",revision:"2aa74284b4de928d6fdac59ab4dfd6b4"},{url:"/_next/static/media/e4af272ccee01ff0-s.p.woff2",revision:"65850a373e258f1c897a2b3d75eb74de"},{url:"/_next/static/media/ecb0c194634e5a7f-s.woff2",revision:"c417e9b8780fef87c0f58a4035b38351"},{url:"/_next/static/media/f8e18c958c99c036-s.woff2",revision:"669ec9639cbd26c60ac66dc84b7fb147"},{url:"/_next/static/media/ffe82e8670ea94ea-s.p.woff2",revision:"8173eb521e365ca9f9ee2a5d6158c4ab"},{url:"/_next/static/media/layers-2x.9859cd12.png",revision:"9859cd12"},{url:"/_next/static/media/layers.ef6db872.png",revision:"ef6db872"},{url:"/_next/static/media/marker-icon.d577052a.png",revision:"d577052a"},{url:"/_next/static/sYiy9kgzzhG5IS6a3wblZ/_buildManifest.js",revision:"0ea7e7088aabf697ba3d8aa8c7b54a89"},{url:"/_next/static/sYiy9kgzzhG5IS6a3wblZ/_ssgManifest.js",revision:"b6652df95db52feb4daf4eca35380933"},{url:"/icon-128x128.png",revision:"d76120b9a2ba7027a1c2db6e7ca087bb"},{url:"/icon-144x144.png",revision:"e2dbded058eed38930668ef7bc1fac63"},{url:"/icon-152x152.png",revision:"f4f1b7634c226f2edd21602baa349d36"},{url:"/icon-192x192.png",revision:"1d9f5da43c356464615a6274f898d69b"},{url:"/icon-256x256.png",revision:"563bacfa5ace18650a38c0f440c416bd"},{url:"/icon-384x384.png",revision:"b6ed20c4daffca65e4e96f97887a1b39"},{url:"/icon-48x48.png",revision:"7b0e997ab8619055d8d7a913c5c47f50"},{url:"/icon-512x512.png",revision:"35443456d63be7ed443eef2d384a0617"},{url:"/icon-72x72.png",revision:"3fc3ee266ec7f94cf1212638fd594e2d"},{url:"/icon-96x96.png",revision:"b3f5d5300907b007969d48cef9914d2a"},{url:"/manifest.json",revision:"49b1e4f4760e4489e9817376780ccf05"}],{ignoreURLParametersMatching:[]}),e.cleanupOutdatedCaches(),e.registerRoute("/",new e.NetworkFirst({cacheName:"start-url",plugins:[{cacheWillUpdate:async({request:e,response:a,event:s,state:i})=>a&&"opaqueredirect"===a.type?new Response(a.body,{status:200,statusText:"OK",headers:a.headers}):a}]}),"GET"),e.registerRoute(/^https:\/\/everyayah\.com\/.*/i,new e.CacheFirst({cacheName:"quran-audio-cache",plugins:[new e.ExpirationPlugin({maxEntries:200,maxAgeSeconds:2592e3})]}),"GET"),e.registerRoute(/^https:\/\/.*\.supabase\.co\/.*/i,new e.StaleWhileRevalidate({cacheName:"supabase-cache",plugins:[new e.ExpirationPlugin({maxEntries:50,maxAgeSeconds:86400})]}),"GET"),e.registerRoute(/\/_next\/static\/.*/i,new e.CacheFirst({cacheName:"static-cache",plugins:[new e.ExpirationPlugin({maxEntries:200,maxAgeSeconds:2592e3})]}),"GET")});
+/**
+ * Copyright 2018 Google Inc. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// If the loader is already loaded, just stop.
+if (!self.define) {
+  let registry = {};
+
+  // Used for `eval` and `importScripts` where we can't get script URL by other means.
+  // In both cases, it's safe to use a global var because those functions are synchronous.
+  let nextDefineUri;
+
+  const singleRequire = (uri, parentUri) => {
+    uri = new URL(uri + ".js", parentUri).href;
+    return registry[uri] || (
+      
+        new Promise(resolve => {
+          if ("document" in self) {
+            const script = document.createElement("script");
+            script.src = uri;
+            script.onload = resolve;
+            document.head.appendChild(script);
+          } else {
+            nextDefineUri = uri;
+            importScripts(uri);
+            resolve();
+          }
+        })
+      
+      .then(() => {
+        let promise = registry[uri];
+        if (!promise) {
+          throw new Error(`Module ${uri} didn’t register its module`);
+        }
+        return promise;
+      })
+    );
+  };
+
+  self.define = (depsNames, factory) => {
+    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
+    if (registry[uri]) {
+      // Module is already loading or loaded.
+      return;
+    }
+    let exports = {};
+    const require = depUri => singleRequire(depUri, uri);
+    const specialDeps = {
+      module: { uri },
+      exports,
+      require
+    };
+    registry[uri] = Promise.all(depsNames.map(
+      depName => specialDeps[depName] || require(depName)
+    )).then(deps => {
+      factory(...deps);
+      return exports;
+    });
+  };
+}
+define(['./workbox-e43f5367'], (function (workbox) { 'use strict';
+
+  importScripts();
+  self.skipWaiting();
+  workbox.clientsClaim();
+  workbox.registerRoute("/", new workbox.NetworkFirst({
+    "cacheName": "start-url",
+    plugins: [{
+      cacheWillUpdate: async ({
+        request,
+        response,
+        event,
+        state
+      }) => {
+        if (response && response.type === 'opaqueredirect') {
+          return new Response(response.body, {
+            status: 200,
+            statusText: 'OK',
+            headers: response.headers
+          });
+        }
+        return response;
+      }
+    }]
+  }), 'GET');
+  workbox.registerRoute(/.*/i, new workbox.NetworkOnly({
+    "cacheName": "dev",
+    plugins: []
+  }), 'GET');
+
+}));
+//# sourceMappingURL=sw.js.map
